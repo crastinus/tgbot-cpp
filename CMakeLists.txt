@@ -5,7 +5,17 @@ project(TgBot)
 option(ENABLE_TESTS "Set to ON to enable building of tests" OFF)
 
 ### sources
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
+if (UNIX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
+endif(UNIX)
+
+if (MSVC)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_WIN32_WINNT=0x0501")
+  
+  #prevent double noexcept
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_ASIO_ERROR_CATEGORY_NOEXCEPT=noexcept(true)")
+endif(MSVC)
+
 include_directories(include)
 set(SRC_LIST
 	src/Api.cpp
@@ -32,11 +42,19 @@ include_directories(${OPENSSL_INCLUDE_DIR})
 
 # boost
 set(Boost_USE_MULTITHREADED ON)
-if (ENABLE_TESTS)
-	find_package(Boost 1.59.0 COMPONENTS system iostreams unit_test_framework REQUIRED)
-else()
-	find_package(Boost 1.59.0 COMPONENTS system iostreams REQUIRED)
-endif()
+
+if (UNIX)
+  if (ENABLE_TESTS)
+	  find_package(Boost 1.59.0 COMPONENTS system iostreams unit_test_framework REQUIRED)
+  else()
+	  find_package(Boost 1.59.0 COMPONENTS system iostreams REQUIRED)
+  endif()
+endif(UNIX)
+
+if (MSVC) 
+   link_directories(${Boost_LIBRARY_DIRS})
+endif(MSVC)
+
 include_directories(${Boost_INCLUDE_DIR})
 
 set(LIB_LIST

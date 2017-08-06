@@ -81,3 +81,10 @@ Feel free to [create new issues on GitHub](https://github.com/reo7sp/tgbot-cpp/i
 
 ## Licence
 [The MIT License](http://opensource.org/licenses/MIT).
+
+## Fork tips
+Created for compability with visual studio 2015-2017.
+
+Configure project like (change path to your boost root/libs directory)
+
+  cmake . -DBOOST_ROOT="D:\\boost\\boost_1_59_0" -DBoost_LIBRARY_DIRS="D:\\boost\\boost_1_59_0\\x86_64\\lib"
